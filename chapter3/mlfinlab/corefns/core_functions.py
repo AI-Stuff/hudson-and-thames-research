@@ -30,22 +30,14 @@ class CoreFunctions:
         :return: (series) of daily volatility value
         """
         print('Calculating daily volatility for dynamic thresholds')
+        
         # daily vol re-indexed to close
         df0 = close.index.searchsorted(close.index - pd.Timedelta(days=1))
         df0 = df0[df0 > 0]
-        df0 = (pd.Series(close.index[df0 - 1],
-                         index=close.index[close.shape[0] - df0.shape[0]:]))
-        try:
-            df0 = close.loc[df0.index] / close.loc[df0.values].values - 1  # daily returns
-
-        except Exception as e:
-            print(f'error: {e} \n please confirm no duplicate indices')
-            print('adjusting shape of close.loc[df0.index]')
-            cut = close.loc[df0.index].shape[0] - close.loc[df0.values].shape[0]
-            df0 = close.loc[df0.index].iloc[:-cut] / close.loc[df0.values].values - 1
-
+        df0 = (pd.Series(close.index[df0 - 1], index=close.index[close.shape[0] - df0.shape[0]:]))
+        
+        df0 = close.loc[df0.index] / close.loc[df0.values].values - 1  # daily returns
         df0 = df0.ewm(span=lookback).std()
-        df0.rename(columns={'price': 'dailyVol'}, inplace=True)
         return df0
 
     @staticmethod
@@ -61,8 +53,8 @@ class CoreFunctions:
 
         One practical aspect that makes CUSUM filters appealing is that multiple events are not
         triggered by gRaw hovering around a threshold level, which is a flaw suffered by popular
-        market signals such as Bollinger Bands. It will require a full run of length threshold for raw_price
-        to trigger an event.
+        market signals such as Bollinger Bands. It will require a full run of length threshold for 
+        raw_price to trigger an event.
 
         Once we have obtained this subset of event-driven bars, we will let the ML algorithm determine
         whether the occurrence of such events constitutes actionable intelligence.
@@ -85,17 +77,10 @@ class CoreFunctions:
 
         # Get event time stamps for the entire series
         for i in tqdm(diff.index[1:]):
-            # ToDo: I don't understand why this try catch is needed?
-            try:
-                pos, neg = float(s_pos + diff.loc[i]), float(s_neg + diff.loc[i])
-            except Exception as error:
-                print(error)
-                print(s_pos + diff.loc[i], type(s_pos + diff.loc[i]))
-                print(s_neg + diff.loc[i], type(s_neg + diff.loc[i]))
-                break
-
-            s_pos = max(0., pos)
-            s_neg = min(0., neg)
+            pos = float(s_pos + diff.loc[i])
+            neg = float(s_neg + diff.loc[i])
+            s_pos = max(0.0, pos)
+            s_neg = min(0.0, neg)
 
             if s_neg < -threshold:
                 s_neg = 0
@@ -130,11 +115,13 @@ class CoreFunctions:
 
     @staticmethod
     def apply_pt_sl_on_t1(close, events, pt_sl, molecule):
-        """ This function applies the triple-barrier labeling method. It works
-        on a set of datetime index values (molecule).  This allows the program
+        """
+        Snippet 3.2, page 45, Triple Barrier Labeling Method
+        
+        This function applies the triple-barrier labeling method. It works
+        on a set of datetime index values (molecule). This allows the program
         to parallelize the processing.
 
-        Snippet 3.2 page 45
         :param close: (series) close prices
         :param events: (series) of indices that signify "events" (see get_t_events function
         for more details)
@@ -149,15 +136,18 @@ class CoreFunctions:
             pt = pt_sl[0] * events_['trgt']
         else:
             pt = pd.Series(index=events.index)  # NaNs
+
         if pt_sl[1] > 0:
             sl = -pt_sl[1] * events_['trgt']
         else:
             sl = pd.Series(index=events.index)  # NaNs
+
         for loc, t1 in events_['t1'].fillna(close.index[-1]).iteritems():
             df0 = close[loc:t1]  # path prices
             df0 = (df0 / close[loc] - 1) * events_.at[loc, 'side']  # path returns
             out.loc[loc, 'sl'] = df0[df0 < sl[loc]].index.min()  # earliest stop loss
             out.loc[loc, 'pt'] = df0[df0 > pt[loc]].index.min()  # earliest profit taking
+
         return out
 
     @staticmethod
@@ -198,16 +188,15 @@ class CoreFunctions:
 
         # 3) Form events object, apply stop loss on vertical barrier
         if side is None:
-            # side_, pt_sl_ = pd.Series(1., index=target.index), [pt_sl[0], pt_sl[0]]
             side_ = pd.Series(1., index=target.index)
             pt_sl_ = [pt_sl[0], pt_sl[0]]
         else:
-            # side_, pt_sl_ = side.loc[target.index], pt_sl[:2]
             side_ = side.loc[target.index]
             pt_sl_ = pt_sl[:2]
 
-        events = (pd.concat({'t1': vertical_barrier_times, 'trgt': target, 'side': side_}, axis=1)
-                  .dropna(subset=['trgt']))
+        events = pd.concat({'t1': vertical_barrier_times, 'trgt': target, 'side': side_},
+                           axis=1)
+        events = events.dropna(subset=['trgt'])
 
         # Apply Triple Barrier
         df0 = MultiProcessingFunctions.mp_pandas_obj(func=CoreFunctions.apply_pt_sl_on_t1,
@@ -225,7 +214,7 @@ class CoreFunctions:
         return events
 
     @staticmethod
-    def get_bins(events, close):
+    def get_bins(triple_barrier_events, close):
         """
         Snippet 3.7, page 51, Labeling for Side & Size with Meta Labels
 
@@ -237,7 +226,7 @@ class CoreFunctions:
         The ML algorithm will be trained to decide is 1, we can use the probability of this secondary prediction
         to derive the size of the bet, where the side (sign) of the position has been set by the primary model.
 
-        :param events: (data frame)
+        :param triple_barrier_events: (data frame)
                     -events.index is event's starttime
                     -events['t1'] is event's endtime
                     -events['trgt'] is event's target
@@ -247,31 +236,63 @@ class CoreFunctions:
         :param close: (series) close prices
         :return: (data frame) of meta-labeled events
         """
-        # Todo: This function doesnt match the book. Whats up with the commented out lines?
 
-        # 1) prices aligned with events
-        events_ = events.dropna(subset=['t1'])
-        # px=events_.index.union(events_['t1'].values).drop_duplicates()
+        # 1) Align prices with their respective events
+        events_ = triple_barrier_events.dropna(subset=['t1'])
+        prices = events_.index.union(events_['t1'].values)
+        prices = prices.drop_duplicates()
+        prices = close.reindex(prices, method='bfill')
+        
+        # 2) Create out DataFrame
+        out_df = pd.DataFrame(index=events_.index)
+        out_df['ret'] = prices.loc[events_['t1'].values].values / prices.loc[events_.index] - 1
+        out_df['trgt'] = events_['trgt']
 
-        # start of change
-        px = events_.index.union(events_['t1'].values)
-        px = px.drop_duplicates()
-        # end of change
-
-        px = close.reindex(px, method='bfill')
-        # 2) create out object
-        out = pd.DataFrame(index=events_.index)
-        out['ret'] = px.loc[events_['t1'].values].values / px.loc[events_.index] - 1
-
+        # Meta labeling: Events that were correct will have pos returns
         if 'side' in events_:
-            out['ret'] *= events_['side']  # meta-labeling
+            out_df['ret'] = out_df['ret'] * events_['side']  # meta-labeling
 
-        # out['bin']=np.sign(out['ret'])
-        out['bin'] = [1 if out['ret'].iloc[i] >= 0. else -1 for i in np.arange(len(out))]
+        # Added code: label 0 when vertical barrier reached
+        out_df = CoreFunctions.barrier_touched(out_df)
 
+        # Meta labeling: label incorrect events with a 0
         if 'side' in events_:
-            out.loc[out['ret'] <= 0, 'bin'] = 0  # meta-labeling
-        return out
+            out_df.loc[out_df['ret'] <= 0, 'bin'] = 0
+
+        return out_df
+
+    @staticmethod
+    def barrier_touched(out_df):
+        """
+        Snippet 3.9, pg 55, Question 3.3
+        Adjust the getBins function (Snippet 3.7) to return a 0 whenever the vertical barrier is the one touched first.
+
+        Top horizontal barrier: 1
+        Bottom horizontal barrier: -1
+        Vertical barrier: 0
+
+        :param out_df: (DataFrame) containing the returns and target
+        :return: (DataFrame) containing returns, target, and labels
+        """
+        store = []
+        for i in np.arange(len(out_df)):
+            date_time = out_df.index[i]
+            ret = out_df.loc[date_time, 'ret']
+            target = out_df.loc[date_time, 'trgt']
+
+            if ret > 0.0 and ret > target:
+                # Top barrier reached
+                store.append(1)
+            elif ret < 0.0 and ret < -target:
+                # Bottom barrier reached
+                store.append(-1)
+            else:
+                # Vertical barrier reached
+                store.append(0)
+
+        out_df['bin'] = store
+
+        return out_df
 
     @staticmethod
     def drop_labels(events, min_pct=.05):
