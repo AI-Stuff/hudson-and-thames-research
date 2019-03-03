@@ -41,6 +41,29 @@ class CoreFunctions:
         return df0
 
     @staticmethod
+    def get_autocorr(close, lookback=100):
+        """
+        Daily Autocorr Estimates
+
+        See the pandas documentation for details on the pandas.Series.ewm function.
+
+        :param close: (data frame) Closing prices
+        :param lookback: (int) lookback period to compute volatility
+        :return: (series) of daily volatility value
+        """
+        print('Calculating Daily AutoCorr')
+
+        # daily vol re-indexed to close
+        df0 = close.index.searchsorted(close.index - pd.Timedelta(days=1))
+        df0 = df0[df0 > 0]
+        df0 = (pd.Series(close.index[df0 - 1], index=close.index[close.shape[0] - df0.shape[0]:]))
+
+        df0 = close.loc[df0.index] / close.loc[df0.values].values - 1  # daily returns
+        # df0 = df0.ewm(span=lookback).autocorr()
+        df0 = df0.rolling(lookback).apply(lambda x: x.autocorr(), raw=False)
+        return df0
+
+    @staticmethod
     def get_t_events(raw_price, threshold):
         """
         Snippet 2.4, page 39, The Symmetric CUSUM Filter.
