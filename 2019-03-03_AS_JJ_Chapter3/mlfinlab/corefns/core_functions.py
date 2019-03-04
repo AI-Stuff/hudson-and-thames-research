@@ -268,7 +268,8 @@ class CoreFunctions:
         
         # 2) Create out DataFrame
         out_df = pd.DataFrame(index=events_.index)
-        out_df['ret'] = prices.loc[events_['t1'].values].values / prices.loc[events_.index] - 1
+        # Need to take the log returns, else your results will be skewed for short positions
+        out_df['ret'] = np.log(prices.loc[events_['t1'].values].values) - np.log(prices.loc[events_.index])
         out_df['trgt'] = events_['trgt']
 
         # Meta labeling: Events that were correct will have pos returns
@@ -281,6 +282,9 @@ class CoreFunctions:
         # Meta labeling: label incorrect events with a 0
         if 'side' in events_:
             out_df.loc[out_df['ret'] <= 0, 'bin'] = 0
+        
+        # Transform the log returns back to normal returns.
+        out_df['ret'] = np.exp(out_df['ret']) - 1
 
         return out_df
 
