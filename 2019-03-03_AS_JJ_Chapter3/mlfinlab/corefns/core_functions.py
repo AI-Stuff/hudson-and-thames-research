@@ -285,6 +285,13 @@ class CoreFunctions:
         
         # Transform the log returns back to normal returns.
         out_df['ret'] = np.exp(out_df['ret']) - 1
+        
+        # Add the side to the output. This is useful for when a meta label model must be fit
+        tb_cols = triple_barrier_events.columns
+        if 'side' in tb_cols:
+            out_df['side'] = triple_barrier_events['side']
+            
+        out_df
 
         return out_df
 
