@@ -16,7 +16,7 @@ The following fields are available:
 * Cumulative Volume
 * Cumulative Ticks
 
-## Re create data
+## Recreate Data
 To create the data structures from first principles, make use of the [mlfinlab package](https://github.com/hudson-and-thames/mlfinlab).
 We made use of raw tick data.
 
