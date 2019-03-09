@@ -1,5 +1,5 @@
 import numpy as np
-
+from statsmodels.tsa.stattools import adfuller
 
 # from: http://www.mirzatrokic.ca/FILES/codes/fracdiff.py
 # small modification: wrapped 2**np.ceil(...) around int()
@@ -61,4 +61,54 @@ def frac_diff_ffd(price_series, differencing_amt, threshold=1e-5):
         output.append(np.dot(weights.T, price_series[i - width:i + 1])[0])
     return np.array(output)
 
+def compare_adf_stat_with_critical_values(result):
+    """ Function compares the t-stat with adfuller critcial values (1%) and returnsm true or false
+        depending on if the t-stat >= adfuller critical value
+        :result (dict_items) Output from adfuller test
+        :return (bool)
+    """
+    tstat = abs(next(iter(result[4].items()))[1])
+    adf_stat = abs(round(result[0], 3))
+    if adf_stat >= tstat:
+        return True
+    else:
+        return False
 
+def compute_differencing_amt(price_series, threshold=1e-5):
+    """ Function iterates over the differencing amounts and computes the smallest amt that will make the 
+        series stationary
+        :price_series (pd.Series) price series
+        :threshold (float) pass-thru to fracdiff function
+        :return (float) differencing amount
+    """
+    test_range = np.arange(0.0, 1., 0.05)
+    found = False
+    i = 0
+    while not found:
+        fracs = frac_diff_ffd(price_series.apply(np.log), differencing_amt=test_range[i], threshold=threshold)
+        result = adfuller(fracs, maxlag=2, regression='C', autolag='AIC', store=False, regresults=False)
+        if compare_adf_stat_with_critical_values(result):
+            if i > 0 and i < len(test_range):
+                test_narrow_range = np.arange(test_range[i-1], test_range[i+1], 0.01)
+                found = False
+                j = 0
+                while not found:
+                    fracs = frac_diff_ffd(price_series.apply(np.log), differencing_amt=test_narrow_range[j], threshold=threshold)
+                    result = adfuller(fracs, maxlag=2, regression='C', autolag='AIC', store=False, regresults=False)
+                    if compare_adf_stat_with_critical_values(result):
+                        found = True
+                        diff_amt = test_narrow_range[j]
+                    else:
+                        j += 1
+            elif i == 0:
+                found = True
+                diff_amt = test_range[i+1]
+            else:
+                found = True
+                diff_amt = test_range[len(test_range)]
+        else: 
+            i += 1
+    if not found:
+        diff_amt = 1.0
+        
+    return diff_amt
