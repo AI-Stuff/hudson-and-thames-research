@@ -79,7 +79,7 @@ def compute_differencing_amt(price_series, threshold=1e-5):
         series stationary
         :price_series (pd.Series) price series
         :threshold (float) pass-thru to fracdiff function
-        :return (float) differencing amount
+        :return (float) differencing amount 
     """
     test_range = np.arange(0.0, 1., 0.05)
     found = False
