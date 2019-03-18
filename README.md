@@ -24,6 +24,12 @@ A good place to start for new users is to use the data provided to answer the qu
 ## Installation on Mac OS X and Ubuntu Linux
 Make sure you install the latest version of the Anaconda 3 distribution. To do this you can follow the install and update instructions found on this link: https://www.anaconda.com/download/#mac
 
+### Create a New Conda Environment
+From terminal: ```conda create -n <env name> python=3.6 anaconda``` accept all the requests to install.
+
+Now activate the environment with ```source activate <env name>```.
+
+### Install Packages
 From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
 
 Run the command: ```pip install -r pip_requirements.txt```
