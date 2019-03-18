@@ -1,8 +1,8 @@
 # Research Repo
-Contains all the Jupyter Notebooks used in our research. 
+Contains all the Jupyter Notebooks used in our research.
 
 ## Additional Research Repo
-BlackArbsCEO has a great repo based on de Prado's research. It covers many of the questions at the back of every chapter and was the first source on Github to do so. It has also been a good source of inspiration for our research. 
+BlackArbsCEO has a great repo based on de Prado's research. It covers many of the questions at the back of every chapter and was the first source on Github to do so. It has also been a good source of inspiration for our research.
 
 * [Adv Fin ML Exercises](https://github.com/BlackArbsCEO/Adv_Fin_ML_Exercises)
 
@@ -20,3 +20,11 @@ A good place to start for new users is to use the data provided to answer the qu
 
 ## Naming convention:
 ```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
+
+## Getting Started
+### Installation on Mac OS X and Ubuntu Linux
+Make sure you install the latest version of the Anaconda 3 distribution. To do this you can follow the install and update instructions found on this link: https://www.anaconda.com/download/#mac
+
+From Terminal: go to the directory where you have saved the file, example: cd Desktop/mlfinlab/.
+
+Run the command: ```pip install -r pip_requirements.txt```
