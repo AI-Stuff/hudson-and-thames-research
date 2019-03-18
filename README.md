@@ -20,9 +20,8 @@ A good place to start for new users is to use the data provided to answer the qu
 
 ## Naming convention:
 ```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
-
-## Getting Started
-### Installation on Mac OS X and Ubuntu Linux
+## Getting Starte
+## Installation on Mac OS X and Ubuntu Linux
 Make sure you install the latest version of the Anaconda 3 distribution. To do this you can follow the install and update instructions found on this link: https://www.anaconda.com/download/#mac
 
 From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
