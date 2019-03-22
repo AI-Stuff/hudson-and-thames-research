@@ -47,10 +47,10 @@ Recommended versions:
 1. Download and install the latest version of [Anaconda 3](https://www.anaconda.com/distribution/#download-section)
 2. Launch Anaconda Navigator
 3. Click Environments, choose an environment name, select Python 3.6, and click Create
-4. Activate the environment: ```conda activate <env name>```
+4. Launch Anaconda Prompt and activate the environment: ```conda activate <env name>```
 5. Install Python requirements:
 
-  From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
+  From Anaconda Prompt: go to the directory where you have saved the file, example: cd Desktop/research/.
 
   Run the command: ```pip install -r requirements.txt```
 
