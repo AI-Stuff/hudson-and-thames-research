@@ -55,12 +55,12 @@ Recommended versions:
 
 ### Chapter-specific Installation
 
-We will use Chapter3 as an example for the following commands
+We will create a symlink inside each of the Chapters for ease of dataset changes. You may change the symlink of `official_data` to your own dataset rather than using the 2 year sample; the format follows Tick Data LLC.
 
-1. Install the chapter-specific requirements: ```pip install -r Chapter3/requirements.txt```
-2. Create a symbolic link inside the Chapter3 from where you saved the official data: ``` cd Chapter3; ln -s ../Sample-Data official_data ```
+Create a symbolic link inside the Chapter folder to where you saved the official
+data:
 
-Note: You may change the symlink of `official_data` to your own dataset rather than using the 2 year sample; the format follows Tick Data LLC
+``` cd Chapter3; ln -s ../Sample-Data official_data ```
 
 ## Additional Research Repo
 BlackArbsCEO has a great repo based on de Prado's research. It covers many of the questions at the back of every chapter and was the first source on Github to do so. It has also been a good source of inspiration for our research.
