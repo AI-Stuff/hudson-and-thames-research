@@ -1,12 +1,13 @@
 # Research Repo
+
 Contains all the Jupyter Notebooks used in our research.
 
-## Additional Research Repo
-BlackArbsCEO has a great repo based on de Prado's research. It covers many of the questions at the back of every chapter and was the first source on Github to do so. It has also been a good source of inspiration for our research.
+All of the research we do in these notebooks is on the full tick history dataset from Tick Data LLC, but not provided because of royalty fees.  The data can be purchased for about $750 US Dollars for the full history of a single ticker.
 
-* [Adv Fin ML Exercises](https://github.com/BlackArbsCEO/Adv_Fin_ML_Exercises)
+We do provide a 2 year sample on tick, volume, and dollar bars to help the community get started. 
 
 ## Sample Data
+
 The following [folder](https://github.com/hudson-and-thames/research/tree/master/Sample-Data) contains 2 years sample data on S&P500 Emini Futures, for the period 2015-01-01 to 2017-01-01.
 
 Specifically the following data structures:
@@ -14,11 +15,11 @@ Specifically the following data structures:
 * Volume Bars: Sampled every 28'000 contracts
 * Tick Bars: Sampled every 2'800 ticks
 
-Our hope is that the following samples will enable the community to build on the research and contribute to the open source community.
+## Contributing
 
-A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
+Our hope is that the following samples will enable the community to build on the research and contribute to the open source community. A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
 
-## Naming convention:
+### Naming convention:
 ```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
 
 ## Installation on Mac OS X and Ubuntu Linux
@@ -40,3 +41,10 @@ We will use Chapter3 as an example for the following commands
 
 1. Install the chapter-specific requirements: ```pip install -r Chapter3/requirements.txt```
 2. Create a symbolic link inside the Chapter3 from where you saved the official data: ``` cd Chapter3; ln -s ../Sample-Data official_data ```
+
+Note: You may change the symlink of `official_data` to your own dataset rather than using the 2 year sample; the format follows Tick Data LLC
+
+## Additional Research Repo
+BlackArbsCEO has a great repo based on de Prado's research. It covers many of the questions at the back of every chapter and was the first source on Github to do so. It has also been a good source of inspiration for our research.
+
+* [Adv Fin ML Exercises](https://github.com/BlackArbsCEO/Adv_Fin_ML_Exercises)
