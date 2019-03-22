@@ -17,23 +17,42 @@ Specifically the following data structures:
 
 ## Contributing
 
-Our hope is that the following samples will enable the community to build on the research and contribute to the open source community. A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
+Our hope is that the following samples will enable the community to build on the research and contribute to the open source community. 
+
+A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
 
 ### Naming convention:
 ```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
 
-## Installation on Mac OS X and Ubuntu Linux
-Make sure you install the latest version of the Anaconda 3 distribution. To do this you can follow the install and update instructions found on this link: https://www.anaconda.com/download/#mac
+## Installation
 
-### Create a New Conda Environment
-From terminal: ```conda create -n <env name> python=3.6 anaconda``` accept all the requests to install.
+Recommended versions:
+* Anaconda 3
+* Python 3.6
 
-Now activate the environment with ```source activate <env name>```.
+### Installation for Mac OS X and Ubuntu Linux
 
-### Install Packages
-From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
+1. Make sure you install the latest version of the Anaconda 3 distribution. To do this you can follow the install and update instructions found on this link: https://www.anaconda.com/download/#mac
+2. Launch a terminal
+3. Create a New Conda Environment. From terminal: ```conda create -n <env name> python=3.6 anaconda``` accept all the requests to install.
+4. Now activate the environment with ```source activate <env name>```.
+5. Install Python requirements:
 
-Run the command: ```pip install -r requirements.txt```
+  From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
+
+  Run the command: ```pip install -r requirements.txt```
+
+### Installation for Windows
+
+1. Download and install the latest version of [Anaconda 3](https://www.anaconda.com/distribution/#download-section)
+2. Launch Anaconda Navigator
+3. Click Environments, choose an environment name, select Python 3.6, and click Create
+4. Activate the environment: ```conda activate <env name>```
+5. Install Python requirements:
+
+  From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
+
+  Run the command: ```pip install -r requirements.txt```
 
 ### Chapter-specific Installation
 
