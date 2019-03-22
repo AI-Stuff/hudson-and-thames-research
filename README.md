@@ -32,4 +32,11 @@ Now activate the environment with ```source activate <env name>```.
 ### Install Packages
 From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
 
-Run the command: ```pip install -r pip_requirements.txt```
+Run the command: ```pip install -r requirements.txt```
+
+### Chapter-specific Installation
+
+We will use Chapter3 as an example for the following commands
+
+1. Install the chapter-specific requirements: ```pip install -r Chapter3/requirements.txt```
+2. Create a symbolic link inside the Chapter3 from where you saved the official data: ``` cd Chapter3; ln -s ../Sample-Data official_data ```
