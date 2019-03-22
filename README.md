@@ -6,7 +6,15 @@ All of the research we do in these notebooks is on the full tick history dataset
 
 We do provide a 2 year sample on tick, volume, and dollar bars to help the community get started. 
 
-## Sample Data
+## Contributing
+
+Our hope is that the sample data and notebooks will enable the community to build on the research and contribute to the open source community. 
+
+A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
+
+Please review the [Guidelines](https://github.com/hudson-and-thames/research/tree/master/Guidelines.md) for research
+
+### Sample Data
 
 The following [folder](https://github.com/hudson-and-thames/research/tree/master/Sample-Data) contains 2 years sample data on S&P500 Emini Futures, for the period 2015-01-01 to 2017-01-01.
 
@@ -15,13 +23,8 @@ Specifically the following data structures:
 * Volume Bars: Sampled every 28'000 contracts
 * Tick Bars: Sampled every 2'800 ticks
 
-## Contributing
+### Notebook Naming Convention
 
-Our hope is that the following samples will enable the community to build on the research and contribute to the open source community. 
-
-A good place to start for new users is to use the data provided to answer the questions at the back of chapter 2 of Advances in Financial Machine Learning.
-
-### Naming convention:
 ```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
 
 ## Installation
@@ -36,11 +39,9 @@ Recommended versions:
 2. Launch a terminal
 3. Create a New Conda Environment. From terminal: ```conda create -n <env name> python=3.6 anaconda``` accept all the requests to install.
 4. Now activate the environment with ```source activate <env name>```.
-5. Install Python requirements:
-
-  From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
-
-  Run the command: ```pip install -r requirements.txt```
+5. From Terminal: go to the directory where you have saved the file, example: cd Desktop/research/.
+6. Install Python requirements, by running the command: ```pip install -r requirements.txt```
+7. (Optional) Continue to Chapter-specific Installation 
 
 ### Installation for Windows
 
@@ -48,11 +49,9 @@ Recommended versions:
 2. Launch Anaconda Navigator
 3. Click Environments, choose an environment name, select Python 3.6, and click Create
 4. Launch Anaconda Prompt and activate the environment: ```conda activate <env name>```
-5. Install Python requirements:
-
-  From Anaconda Prompt: go to the directory where you have saved the file, example: cd Desktop/research/.
-
-  Run the command: ```pip install -r requirements.txt```
+5. From Anaconda Prompt: go to the directory where you have saved the file, example: cd Desktop/research/.
+6. Install Python requirements, by running the command: ```pip install -r requirements.txt```
+7. (Optional) Continue to Chapter-specific Installation 
 
 ### Chapter-specific Installation
 
