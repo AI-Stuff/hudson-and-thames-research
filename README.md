@@ -57,8 +57,7 @@ Recommended versions:
 
 We will create a symlink inside each of the Chapters for ease of dataset changes. You may change the symlink of `official_data` to your own dataset rather than using the 2 year sample; the format follows Tick Data LLC.
 
-Create a symbolic link inside the Chapter folder to where you saved the official
-data:
+Create a symbolic link inside the Chapter folder to where you saved the official data:
 
 ``` cd Chapter3; ln -s ../Sample-Data official_data ```
 
