@@ -48,10 +48,11 @@ Recommended versions:
 1. Download and install the latest version of [Anaconda 3](https://www.anaconda.com/distribution/#download-section)
 2. Launch Anaconda Navigator
 3. Click Environments, choose an environment name, select Python 3.6, and click Create
-4. Launch Anaconda Prompt and activate the environment: ```conda activate <env name>```
-5. From Anaconda Prompt: go to the directory where you have saved the file, example: cd Desktop/research/.
-6. Install Python requirements, by running the command: ```pip install -r requirements.txt```
-7. (Optional) Continue to Chapter-specific Installation 
+4. Click Home, browse to your new environment, and click Install under Jupyter Notebook
+5. Launch Anaconda Prompt and activate the environment: ```conda activate <env name>```
+6. From Anaconda Prompt: go to the directory where you have saved the file, example: cd Desktop/research/.
+7. Install Python requirements, by running the command: ```pip install -r requirements.txt```
+8. (Optional) Continue to Chapter-specific Installation 
 
 ### Chapter-specific Installation
 
