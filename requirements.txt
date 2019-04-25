@@ -1,6 +1,7 @@
 jupyterlab==0.35.3
 keras==2.2.4
 matplotlib==3.0.2
+mlfinlab==0.1.0
 numpy==1.16.1
 pandas==0.23.4
 patsy==0.5.1
