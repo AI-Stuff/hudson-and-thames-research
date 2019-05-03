@@ -1,6 +1,7 @@
 jupyterlab==0.35.3
 keras==2.2.4
 matplotlib==3.0.2
+mlfinlab==0.1.0
 numpy==1.16.1
 pandas==0.23.4
 patsy==0.5.1
@@ -10,6 +11,6 @@ scikit-learn==0.20.2
 scipy==1.1.0
 seaborn==0.9.0
 statsmodels==0.9.0
-tensorflow==1.5
+tensorflow==1.7.1
 tqdm==4.31.1
 xmlrunner==1.7.7
