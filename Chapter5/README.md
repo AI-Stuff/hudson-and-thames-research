@@ -1,0 +1,5 @@
+# Research Notebooks
+The following notebooks answer the questions at the back of chapter 5 and in the process explore the concept
+of fractional differentiation (frac-diff) in detail. The frac-diff helps address the need to retain as much memory in a time series of asset prices (for instance) while ensureing the series stationary. Stationarity is important for inference analysis and for supervised machine learning.
+
+A stationary series is a result of an unchanging or constant underlying data generation process. In other words, the mean and variance would remain constant for a stationary series. The stationarity in time series allows one to compute probability of events such as gains or losses and make predictions. This is the case with 'inference analysis'.  Stationarity also helps in supervised machine learning. Specifically, in supervised learning one maps hitherto unseen observations to a set of labeled examples and determine the label of the new observation. If the features are not stationary (the underlying data generation process of the feature has evolved) then it would be incorrect to map the new observation to the known examples.
