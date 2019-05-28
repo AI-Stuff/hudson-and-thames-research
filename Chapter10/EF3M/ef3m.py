@@ -154,6 +154,8 @@ class M2N:
         if p1_deno == 0:
             return []  # return empty list if about to divide by zero
         p1 = (m4 - 3*sigma2**4 - 6*sigma2**2*mu2**2 - mu2**4) / p1_deno
+        if (p1<0) or (p1>1):
+            return []
         return [mu1, mu2, sigma1, sigma2, p1]
     
     def iter5(self, mu2, p1, moments):
@@ -210,6 +212,8 @@ class M2N:
         if (a-b) == 0:
             return []  # return empty list if about to divide by zero
         p1 = (m5-b) / (a-b)
+        if (p1<0) or (p1>1):
+            return []
         return [mu1, mu2, sigma1, sigma2, p1]
 
     def singleLoop(self, moments, epsilon=10**-5, factor=5,
