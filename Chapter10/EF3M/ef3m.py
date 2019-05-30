@@ -320,6 +320,7 @@ def rawMoment(central_moments, dist_mean):
         raw_moments.append(moment_n)
     return raw_moments
 
+
 # number of combinations of n over k
 def binomialCoeff(n, k):
     """
