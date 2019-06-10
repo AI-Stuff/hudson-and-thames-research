@@ -201,6 +201,8 @@ class M2N:
         a = ( 6*sigma2**4 + (m4-p1*(3*sigma1**4+6*sigma1**2*mu1**2+mu1**4)) /\
              (1-p1 ) )**.5
         mu2_squared = (a - 3*sigma2**2)
+        if np.iscomplex(mu2_squared):
+            return []
         if mu2_squared < 0:
             return []
         mu2 = mu2_squared**.5
