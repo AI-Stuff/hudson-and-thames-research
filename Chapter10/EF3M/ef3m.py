@@ -15,6 +15,7 @@ from scipy.stats import norm, moment
 from scipy.special import comb
 import scipy.integrate as integrate
 
+import time
 import pandas as pd
 import dask.dataframe as dd
 from dask import delayed
@@ -58,6 +59,7 @@ class M2N:
         :param maxIter: (int) Maximum number of iterations after which 
                         to terminate loop.
         """
+        #np.random.seed(int(time.time()%1e4))
         p1 = np.random.uniform(0, 1)
         #print(f"\nSetup -- p1: {p1}")
         numIter = 0
@@ -198,6 +200,8 @@ class M2N:
             np.isnan(sigma1) or np.isnan(sigma2):
             return []
         # adjust the guess for mu2, Equation (27)
+        if (1-p1) < 1e-7:
+            return []
         a = ( 6*sigma2**4 + (m4-p1*(3*sigma1**4+6*sigma1**2*mu1**2+mu1**4)) /\
              (1-p1 ) )**.5
         mu2_squared = (a - 3*sigma2**2)
