@@ -3,7 +3,7 @@
 Contains all the Jupyter Notebooks used in our research.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/hudson-and-thames/research/master/Chapter3/readme_image.png" height="700"><br>
+  <img src="https://raw.githubusercontent.com/hudson-and-thames/research/master/Chapter3/readme_image.png" height="350"><br>
 </div>
 
 All of the research we do in these notebooks is on the full tick history dataset from Tick Data LLC, but not provided because of royalty fees.  The data can be purchased for about $750 US Dollars for the full history of a single ticker.
