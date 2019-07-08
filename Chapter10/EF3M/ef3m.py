@@ -124,7 +124,7 @@ class M2N:
         are encountered (e.g. complex values, divide-by-zero), otherwise
         an empty list is returned.
         """
-        m1, m2, m3, m4, m5 = moments  # for clarity
+        m1, m2, m3, m4, __ = moments  # for clarity
         # mu1, Equation (22)
         mu1 = (m1 - (1-p1)*mu2) / p1
         # sigma2, Equation (24)
@@ -249,7 +249,7 @@ class M2N:
                 d_results['error'] = [err_min]
         return pd.DataFrame.from_dict(d_results)
 
-    # repeat runs and collect results as a DataFrame
+    # Repeat runs and collect results as a DataFrame.
     def mpFit(self, moments, epsilon=10**-5, factor=5, n_runs=1, variant=1,
                 maxIter=100_000):
         """
@@ -279,7 +279,6 @@ class M2N:
         df = df.sort_values('error')
         return df
 
-
 # === Helper functions, outside class === #
 def centeredMoment(moments, order):
     """
@@ -299,13 +298,10 @@ def centeredMoment(moments, order):
         moment_c += (-1)**j*comb*moments[0]**j*a
     return moment_c
 
-
-# calculate raw moments from moments about the mean (central moments)
 def rawMoment(central_moments, dist_mean):
     """
     Calculates a list of raw moments given a list of 
     central moments.
-
 
     :param central_moments: (list) The first n (1...n) central moments as a list
     :param dist_mean: (float) The mean of the distribution
@@ -322,8 +318,6 @@ def rawMoment(central_moments, dist_mean):
         raw_moments.append(moment_n)
     return raw_moments
 
-
-# number of combinations of n over k
 def binomialCoeff(n, k):
     """
     Calculate the number of way 'n' things can be chosen 'k' at-a-time,
