@@ -127,16 +127,27 @@ def dollar_volume(tick_prices, tick_volumes):
 def amihuds_lambda(close, dollar_volume, regressor=LinearRegression()):
 	log_close = np.log(close)
 	abs_change = np.abs(_get_price_diff(log_close))
-	X = dollar_volume.values.reshape(-1, 1)
-	y = abs_change
+	X = dollar_volume.values[1:].reshape(-1, 1)
+	y = abs_change.dropna()
 	lambda_ = regressor.fit(X, y)
 	return lambda_.coef_[0]
 
-def hasbroucks_lambda():
-	pass
+def hasbroucks_lambda(close, hasbroucks_flow, regressor=LinearRegression()):
+	ratio = _get_price_ratio(close)
+	log_ratio = np.log(ratio)
+	X = hasbroucks_flow.values[1:].reshape(-1, 1)
+	y = log_ratio
+	lambda_ = regressor.fit(X, y)
+	return lambda_.coef_[0]
 
+
+def hasbroucks_flow(tick_prices, tick_volumes, tick_sings):
+	return (np.sqrt(tick_prices * tick_volumes) * tick_sings).sum()
 	
-
+def vpin(buy_volumes, sell_volumes, volume, num_bars):
+	abs_diff = (buy_volumes - sell_volumes).abs()
+	vpin = abs_diff.rolling(window=num_bars).mean() / volume
+	return vpin
 
 
 
