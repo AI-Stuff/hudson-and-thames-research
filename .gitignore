@@ -1,2 +1,4 @@
 *.idea*
 .DS_Store
+Chapter16/__pycache__/hrp_modified.cpython-36.pyc
+*.pyc
