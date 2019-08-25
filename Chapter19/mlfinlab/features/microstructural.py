@@ -2,54 +2,31 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-
-
-def _get_price_diff(prices, first_fill=np.nan):
-	"""
-	Computes the change in price between ticks
-	:param prices: (pd.Series) a series of prices
-	:param first_fill: (float) optional value to replace the first change
-	:return: (pd.Series) a series of price changes 
-
-	"""
-	price_change = prices.diff()
-	if first_fill: 
-		price_change.iloc[0] = first_fill
-	return price_change
-
-def _get_price_ratio(prices, first_fill=np.nan):
-	ratio = pd.Series(index=prices.index[1:], data=prices.values[1:]/prices.values[:-1])
-	return ratio
-
 def tick_rule(tick_prices):
 	"""
 	Applies the tick rule to classify trades as buy-initiated or sell-initiated
 	"""
-	price_change = _get_price_diff(tick_prices)
-	aggressor = pd.Series(index=tick_prices.index, data=0)
+	price_change = tick_prices.diff()
+	aggressor = pd.Series(index=tick_prices.index, data=np.nan)
 
 	aggressor.iloc[0] = 1.
 	aggressor[price_change < 0] = -1.
 	aggressor[price_change > 0] = 1.
-
-	prev_idx = price_change.index[0]
-	for idx, val in price_change.iloc[1:].items():
-		if val == 0: aggressor[idx] = aggressor[prev_idx]
-		prev_idx = idx
+	aggressor = aggressor.fillna(method='ffill')
 	return aggressor
 
-def roll_model(tick_prices):
+def roll_model(prices):
 	"""
 	Estimates 1/2*(bid-ask spread) and unobserved noise based on price sequences
 	"""
-	price_change = _get_price_diff(tick_prices)
+	price_change = prices.diff()
 	autocorr = price_change.autocorr(lag=1)
 	spread_squared = np.max([-autocorr, 0])
 	spread = np.sqrt(spread_squared)
-	noise = price_change.var() + 2 * autocorr
+	noise = price_change.var() - 2 * (spread ** 2)
 	return spread, noise
 
-def high_low_estimator(high, low, window):
+def high_low_estimator(high, low, window=1):
 	"""
 	Estimates volatility using Parkinson's method
 	"""
@@ -113,7 +90,7 @@ def becker_parkinson_volatility(high, low, sample_length=1):
 	return volatility
 
 def kyles_lambda(tick_prices, tick_volumes, regressor=LinearRegression()):
-	price_change = _get_price_diff(tick_prices)
+	price_change = tick_prices.diff()
 	tick_sings = tick_rule(tick_prices)
 	net_order_flow = tick_sings * tick_volumes
 	X = net_order_flow.values[1:].reshape(-1, 1)
@@ -126,14 +103,14 @@ def dollar_volume(tick_prices, tick_volumes):
 
 def amihuds_lambda(close, dollar_volume, regressor=LinearRegression()):
 	log_close = np.log(close)
-	abs_change = np.abs(_get_price_diff(log_close))
+	abs_change = np.abs(log_close.diff())
 	X = dollar_volume.values[1:].reshape(-1, 1)
 	y = abs_change.dropna()
 	lambda_ = regressor.fit(X, y)
 	return lambda_.coef_[0]
 
 def hasbroucks_lambda(close, hasbroucks_flow, regressor=LinearRegression()):
-	ratio = _get_price_ratio(close)
+	ratio = pd.Series(index=prices.index[1:], data=prices.values[1:]/prices.values[:-1])
 	log_ratio = np.log(ratio)
 	X = hasbroucks_flow.values[1:].reshape(-1, 1)
 	y = log_ratio
