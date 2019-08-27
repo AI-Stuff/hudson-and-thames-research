@@ -26,7 +26,7 @@ def roll_model(prices):
 	noise = price_change.var() - 2 * (spread ** 2)
 	return spread, noise
 
-def high_low_estimator(high, low, window=1):
+def high_low_estimator(high, low, window):
 	"""
 	Estimates volatility using Parkinson's method
 	"""
@@ -66,7 +66,7 @@ class CorwinShultz:
 	def get_becker_parkinson_volatility(beta, gamma):
 		k2 = np.sqrt(8 / np.pi)
 		denominator = 3 - 2 ** 1.5
-		beta_term = (2 ** (-1.5) -1) * np.sqrt(beta) / (k2 * denominator)
+		beta_term = (2 ** (-.5) -1) * np.sqrt(beta) / (k2 * denominator)
 		gamma_term = np.sqrt(gamma / (k2 ** 2 * denominator))
 		volatility = beta_term + gamma_term
 		volatility[volatility < 0] = 0
@@ -89,9 +89,9 @@ def becker_parkinson_volatility(high, low, sample_length=1):
 	volatility = CorwinShultz.get_becker_parkinson_volatility(beta, gamma)
 	return volatility
 
-def kyles_lambda(tick_prices, tick_volumes, regressor=LinearRegression()):
+def kyles_lambda(tick_prices, tick_volumes, tick_signs regressor=LinearRegression()):
 	price_change = tick_prices.diff()
-	tick_sings = tick_rule(tick_prices)
+	# tick_sings = tick_rule(tick_prices)
 	net_order_flow = tick_sings * tick_volumes
 	X = net_order_flow.values[1:].reshape(-1, 1)
 	y = price_change.dropna().values
