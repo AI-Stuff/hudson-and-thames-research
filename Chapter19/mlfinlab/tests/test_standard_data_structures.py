@@ -187,7 +187,7 @@ class TestDataStructures(unittest.TestCase):
 
         # Act
         tb = ds.get_tick_bars(self.path, threshold=threshold, batch_size=1000, verbose=False,
-             additional_features= [high_over_low, low_over_high, low, high])
+             additional_features= [high_over_low, low_over_high])
 
         # Assert
         self.assertTrue(np.all(tb['high_over_low'] == tb['high'] / tb['low']))
