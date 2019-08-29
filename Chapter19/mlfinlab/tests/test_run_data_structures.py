@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from mlfinlab.data_structures import run_data_structures as ds
+from mlfinlab.data_structures import BarFeature
 
 
 class TestDataStructures(unittest.TestCase):
@@ -63,6 +64,31 @@ class TestDataStructures(unittest.TestCase):
         # delete generated csv file (if it wasn't generated test would fail)
         os.remove('test.csv')
 
+    def test_run_dollar_bars_additional_features(self):
+        """
+        Tests the additional features functionality with dollar run bars.
+        """
+
+        # Arrange
+        exp_num_ticks_init = 10
+        num_prev_bars = 3
+        high_over_low = BarFeature(
+                        name='high_over_low',
+                        function= lambda df: df['Price'].max() / df['Price'].min()
+                        )
+        low_over_high = BarFeature(
+                        name='low_over_high',
+                        function= lambda df: df['Price'].min() / df['Price'].max()
+                        )
+
+        # Act
+        db = ds.get_dollar_run_bars(self.path, exp_num_ticks_init=exp_num_ticks_init, num_prev_bars=num_prev_bars, batch_size=1000, verbose=False,
+             additional_features= [high_over_low, low_over_high])
+
+        # Assert
+        self.assertTrue(np.all(db['high_over_low'] == db['high'] / db['low']))
+        self.assertTrue(np.all(db['low_over_high'] == db['low'] / db['high']))
+
     def test_run_volume_bars(self):
         """
         Tests the run volume bars implementation.
@@ -101,6 +127,31 @@ class TestDataStructures(unittest.TestCase):
         # delete generated csv file (if it wasn't generated test would fail)
         os.remove('test.csv')
 
+    def test_run_volume_bars_additional_features(self):
+        """
+        Tests the additional features functionality with dollar imbalance bars.
+        """
+
+        # Arrange
+        exp_num_ticks_init = 10
+        num_prev_bars = 3
+        high_over_low = BarFeature(
+                        name='high_over_low',
+                        function= lambda df: df['Price'].max() / df['Price'].min()
+                        )
+        low_over_high = BarFeature(
+                        name='low_over_high',
+                        function= lambda df: df['Price'].min() / df['Price'].max()
+                        )
+
+        # Act
+        vb = ds.get_volume_run_bars(self.path, exp_num_ticks_init=exp_num_ticks_init, num_prev_bars=num_prev_bars, batch_size=1000, verbose=False,
+             additional_features= [high_over_low, low_over_high])
+
+        # Assert
+        self.assertTrue(np.all(vb['high_over_low'] == vb['high'] / vb['low']))
+        self.assertTrue(np.all(vb['low_over_high'] == vb['low'] / vb['high']))
+
     def test_run_tick_bars(self):
         """
         Tests the run tick bars implementation.
@@ -138,6 +189,31 @@ class TestDataStructures(unittest.TestCase):
 
         # delete generated csv file (if it wasn't generated test would fail)
         os.remove('test.csv')
+
+    def test_run_tick_bars_additional_features(self):
+        """
+        Tests the additional features functionality with dollar imbalance bars.
+        """
+
+        # Arrange
+        exp_num_ticks_init = 10
+        num_prev_bars = 3
+        high_over_low = BarFeature(
+                        name='high_over_low',
+                        function= lambda df: df['Price'].max() / df['Price'].min()
+                        )
+        low_over_high = BarFeature(
+                        name='low_over_high',
+                        function= lambda df: df['Price'].min() / df['Price'].max()
+                        )
+
+        # Act
+        tb = ds.get_tick_run_bars(self.path, exp_num_ticks_init=exp_num_ticks_init, num_prev_bars=num_prev_bars, batch_size=1000, verbose=False,
+             additional_features= [high_over_low, low_over_high])
+
+        # Assert
+        self.assertTrue(np.all(tb['high_over_low'] == tb['high'] / tb['low']))
+        self.assertTrue(np.all(tb['low_over_high'] == tb['low'] / tb['high']))
 
     def test_csv_format(self):
         """
