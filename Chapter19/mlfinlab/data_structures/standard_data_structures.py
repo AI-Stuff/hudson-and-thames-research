@@ -18,7 +18,6 @@ Many of the projects going forward will require Dollar and Volume bars.
 # Imports
 from collections import namedtuple
 import numpy as np
-import pandas as pd
 from mlfinlab.data_structures.base_bars import BaseBars
 
 
@@ -31,7 +30,7 @@ class StandardBars(BaseBars):
     This is because we wanted to simplify the logic as much as possible, for the end user.
     """
 
-    def __init__(self, file_path, metric, threshold=50000, batch_size=20000000, additional_features=[]):
+    def __init__(self, file_path, metric, threshold=50000, batch_size=20000000, additional_features=None):
 
         BaseBars.__init__(self, file_path, metric, batch_size, additional_features)
 
@@ -39,7 +38,7 @@ class StandardBars(BaseBars):
         self.threshold = threshold
         # Named tuple to help with the cache
         self.cache_tuple = namedtuple('CacheData',
-                                      ['date_time', 'price', 'high', 'low', 'cum_ticks', 'cum_volume', 'cum_dollar', 'additional_features'])
+                                      ['date_time', 'price', 'high', 'low', 'cum_ticks', 'cum_volume', 'cum_dollar'])
 
     def _extract_bars(self, data):
         """
@@ -76,11 +75,7 @@ class StandardBars(BaseBars):
 
             # If threshold reached then take a sample
             if eval(self.metric) >= self.threshold:  # pylint: disable=eval-used
-                computed_additional_features = self._compute_additional_features()
-
-                self._update_cache(date_time, price, low_price,
-                    high_price, cum_ticks, cum_volume, cum_dollar_value, computed_additional_features)
-
+                self._compute_additional_features()
                 self._create_bars(date_time, price,
                                   high_price, low_price, list_bars)
 
@@ -88,6 +83,7 @@ class StandardBars(BaseBars):
                 cum_ticks, cum_dollar_value, cum_volume, high_price, low_price = 0, 0, 0, -np.inf, np.inf
                 self.cache = []
                 self._reset_ticks_in_bar()
+                self._reset_computed_additional_features()
         return list_bars
 
     def _update_counters(self):
@@ -112,7 +108,7 @@ class StandardBars(BaseBars):
 
         return cum_ticks, cum_dollar_value, cum_volume, high_price, low_price
 
-    def _update_cache(self, date_time, price, low_price, high_price, cum_ticks, cum_volume, cum_dollar_value, additional_features=[]):
+    def _update_cache(self, date_time, price, low_price, high_price, cum_ticks, cum_volume, cum_dollar_value):
         """
         Update the cache which is used to create a continuous flow of bars from one batch to the next.
 
@@ -125,11 +121,11 @@ class StandardBars(BaseBars):
         :param cum_dollar_value: Cumulative dollar value
         """
         cache_data = self.cache_tuple(
-            date_time, price, high_price, low_price, cum_ticks, cum_volume, cum_dollar_value, additional_features)
+            date_time, price, high_price, low_price, cum_ticks, cum_volume, cum_dollar_value)
         self.cache.append(cache_data)
 
 
-def get_dollar_bars(file_path, threshold=70000000, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+def get_dollar_bars(file_path, threshold=70000000, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the dollar bars: date_time, open, high, low, close.
 
@@ -151,7 +147,7 @@ def get_dollar_bars(file_path, threshold=70000000, batch_size=20000000, verbose=
     return dollar_bars
 
 
-def get_volume_bars(file_path, threshold=28224, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+def get_volume_bars(file_path, threshold=28224, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the volume bars: date_time, open, high, low, close.
 
@@ -172,7 +168,7 @@ def get_volume_bars(file_path, threshold=28224, batch_size=20000000, verbose=Tru
     return volume_bars
 
 
-def get_tick_bars(file_path, threshold=2800, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+def get_tick_bars(file_path, threshold=2800, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the tick bars: date_time, open, high, low, close.
 

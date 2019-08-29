@@ -34,7 +34,7 @@ class ImbalanceBars(BaseBars):
     This is because we wanted to simplify the logic as much as possible, for the end user.
     """
 
-    def __init__(self, file_path, metric, num_prev_bars=3, exp_num_ticks_init=100000, batch_size=2e7, additional_features=[]):
+    def __init__(self, file_path, metric, num_prev_bars=3, exp_num_ticks_init=100000, batch_size=2e7, additional_features=None):
         """
         Constructor
 
@@ -55,7 +55,7 @@ class ImbalanceBars(BaseBars):
 
         # Named tuple to help with storing the cache
         self.cache_tuple = namedtuple('CacheData',
-                                      ['date_time', 'price', 'high', 'low', 'cum_ticks', 'cum_volume', 'cum_theta', 'additional_features'])
+                                      ['date_time', 'price', 'high', 'low', 'cum_ticks', 'cum_volume', 'cum_theta'])
         self.expected_imbalance = np.nan
         self.imbalance_array = []
 
@@ -100,10 +100,7 @@ class ImbalanceBars(BaseBars):
 
             # Check expression for possible bar generation
             if np.abs(cum_theta) > self.exp_num_ticks * np.abs(self.expected_imbalance):
-                computed_additional_features = self._compute_additional_features()
-                self._update_cache(date_time, price, low_price,
-                   high_price, cum_ticks, cum_volume, cum_theta, computed_additional_features)
-
+                self._compute_additional_features()
                 self._create_bars(date_time, price,
                                   high_price, low_price, list_bars)
 
@@ -117,6 +114,7 @@ class ImbalanceBars(BaseBars):
                 # Reset counters
                 cum_ticks, cum_volume, cum_theta = 0, 0, 0
                 self._reset_ticks_in_bar()
+                self._reset_computed_additional_features()
                 high_price, low_price = -np.inf, np.inf
                 self.cache = []
 
@@ -146,7 +144,7 @@ class ImbalanceBars(BaseBars):
 
         return cum_ticks, cum_volume, cum_theta, high_price, low_price
 
-    def _update_cache(self, date_time, price, low_price, high_price, cum_ticks, cum_volume, cum_theta, additional_features=[]):
+    def _update_cache(self, date_time, price, low_price, high_price, cum_ticks, cum_volume, cum_theta):
         """
         Update the cache which is used to create a continuous flow of bars from one batch to the next.
 
@@ -159,7 +157,7 @@ class ImbalanceBars(BaseBars):
         :param cum_theta: Cumulative Theta sub t (pg 29)
         """
         cache_data = self.cache_tuple(date_time=date_time, price=price, high=high_price, low=low_price,
-                                      cum_ticks=cum_ticks, cum_volume=cum_volume, cum_theta=cum_theta, additional_features=additional_features)
+                                      cum_ticks=cum_ticks, cum_volume=cum_volume, cum_theta=cum_theta)
         self.cache.append(cache_data)
 
     def _get_expected_imbalance(self, window, imbalance_array):
@@ -188,7 +186,7 @@ class ImbalanceBars(BaseBars):
 
 
 def get_dollar_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the dollar imbalance bars: date_time, open, high, low, close, volume.
 
@@ -210,7 +208,7 @@ def get_dollar_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
 
 
 def get_volume_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the volume imbalance bars: date_time, open, high, low, close, volume.
 
@@ -232,7 +230,7 @@ def get_volume_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
 
 
 def get_tick_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                            batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                            batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the tick imbalance bars: date_time, open, high, low, close, volume.
 

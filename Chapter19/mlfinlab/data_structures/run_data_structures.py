@@ -35,7 +35,7 @@ class RunBars(BaseBars):
     This is because we wanted to simplify the logic as much as possible, for the end user.
     """
 
-    def __init__(self, file_path, metric, num_prev_bars=3, exp_num_ticks_init=100000, batch_size=2e7, additional_features=[]):
+    def __init__(self, file_path, metric, num_prev_bars=3, exp_num_ticks_init=100000, batch_size=2e7, additional_features=None):
         """
         Constructor
 
@@ -58,7 +58,7 @@ class RunBars(BaseBars):
         # Named tuple to help with storing the cache
         self.cache_tuple = namedtuple('CacheData',
                                       ['date_time', 'price', 'high', 'low', 'cum_ticks', 'buy_ticks', 'cum_volume',
-                                       'cum_theta_buy', 'cum_theta_sell', 'additional_features'])
+                                       'cum_theta_buy', 'cum_theta_sell'])
         self.imbalance_array = {'buy': [], 'sell': []}
         self.warm_up = True  # boolean flag for warm-up period
         self.exp_imbalance = {'buy': np.nan, 'sell': np.nan}
@@ -123,10 +123,7 @@ class RunBars(BaseBars):
             max_proportion = max(self.exp_imbalance['buy'] * self.exp_buy_ticks_proportion,
                                  self.exp_imbalance['sell'] * (1 - self.exp_buy_ticks_proportion))
             if max(cum_theta_buy, cum_theta_sell) > self.exp_num_ticks * max_proportion and self.warm_up is False:
-                computed_additional_features = self._compute_additional_features()
-                self._update_cache(date_time, price, low_price, high_price, cum_theta_sell, cum_theta_buy,
-                                   cum_ticks, buy_ticks, cum_volume, computed_additional_features)
-
+                self._compute_additional_features()
                 self._create_bars(date_time, price,
                                   high_price, low_price, list_bars)
 
@@ -149,6 +146,7 @@ class RunBars(BaseBars):
                 high_price, low_price = -np.inf, np.inf
                 self.cache = []
                 self._reset_ticks_in_bar()
+                self._reset_computed_additional_features()
         return list_bars
 
     def _update_counters(self):
@@ -179,7 +177,7 @@ class RunBars(BaseBars):
         return cum_ticks, buy_ticks, cum_volume, cum_theta_buy, cum_theta_sell, high_price, low_price
 
     def _update_cache(self, date_time, price, low_price, high_price, cum_theta_sell, cum_theta_buy,
-                      cum_ticks, buy_ticks, cum_volume, additional_features=[]):
+                      cum_ticks, buy_ticks, cum_volume):
         """
         Update the cache which is used to create a continuous flow of bars from one batch to the next.
 
@@ -194,8 +192,7 @@ class RunBars(BaseBars):
         cache_data = self.cache_tuple(date_time=date_time, price=price, high=high_price, low=low_price,
                                       cum_ticks=cum_ticks, buy_ticks=buy_ticks, cum_volume=cum_volume,
                                       cum_theta_buy=cum_theta_buy,
-                                      cum_theta_sell=cum_theta_sell,
-                                      additional_features=additional_features)
+                                      cum_theta_sell=cum_theta_sell)
         self.cache.append(cache_data)
 
     def _get_expected_imbalance(self, window, imbalance_array):
@@ -224,7 +221,7 @@ class RunBars(BaseBars):
 
 
 def get_dollar_run_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                        batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                        batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the dollar run bars: date_time, open, high, low, close, volume.
 
@@ -247,7 +244,7 @@ def get_dollar_run_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
 
 
 def get_volume_run_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                        batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                        batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the volume run bars: date_time, open, high, low, close, volume.
 
@@ -269,7 +266,7 @@ def get_volume_run_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
 
 
 def get_tick_run_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                      batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
+                      batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=None):
     """
     Creates the tick run bars: date_time, open, high, low, close, volume.
 

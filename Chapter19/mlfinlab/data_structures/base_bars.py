@@ -15,7 +15,7 @@ class BaseBars(ABC):
     they are included here so as to avoid a complicated nested class structure.
     """
 
-    def __init__(self, file_path, metric, batch_size=2e7, additional_features=[]):
+    def __init__(self, file_path, metric, batch_size=2e7, additional_features=None):
         """
         Constructor
 
@@ -32,9 +32,10 @@ class BaseBars(ABC):
         # Batch_run properties
         self.flag = False  # The first flag is false since the first batch doesn't use the cache
         self.cache = []
-
-
+        if not additional_features: 
+            additional_features = []
         self.additional_features = additional_features
+        self.computed_additional_features = []
         self.ticks_in_current_bar = []
 
     def batch_run(self, verbose=True, to_csv=False, output_path=None):
@@ -138,10 +139,10 @@ class BaseBars(ABC):
     def _update_ticks_in_bar(self, row):
         """
         Maintain the list of ticks for current bar
-        :param row: tick row to be added 
+        :param row: tick row to be added
         :return: None
         """
-        if len(self.additional_features) > 0:
+        if self.additional_features:
             self.ticks_in_current_bar.append(row)
 
     def _reset_ticks_in_bar(self):
@@ -156,12 +157,15 @@ class BaseBars(ABC):
         """
         computed_additional_features = []
 
-        if len(self.additional_features) > 0: 
+        if self.additional_features:
             tick_df = pd.DataFrame(self.ticks_in_current_bar)
             for feature in self.additional_features:
                 computed_additional_features.append(feature.compute(tick_df))
 
-        return computed_additional_features
+        self.computed_additional_features = computed_additional_features
+
+    def _reset_computed_additional_features(self):
+        self.computed_additional_features = []
 
 
 
@@ -184,7 +188,7 @@ class BaseBars(ABC):
         low_price = min(low_price, open_price)
         close_price = price
         volume = self.cache[-1].cum_volume
-        additional_features = self.cache[-1].additional_features
+        additional_features = self.computed_additional_features
 
         # Update bars
         list_bars.append([date_time, open_price, high_price, low_price, close_price, volume] + additional_features)
