@@ -88,10 +88,6 @@ class StandardBars(BaseBars):
                 cum_ticks, cum_dollar_value, cum_volume, high_price, low_price = 0, 0, 0, -np.inf, np.inf
                 self.cache = []
                 self._reset_ticks_in_bar()
-                # Update cache after bar generation
-                self._update_cache(
-                    date_time, price, low_price, high_price, cum_ticks, cum_volume, cum_dollar_value)
-
         return list_bars
 
     def _update_counters(self):
@@ -176,7 +172,7 @@ def get_volume_bars(file_path, threshold=28224, batch_size=20000000, verbose=Tru
     return volume_bars
 
 
-def get_tick_bars(file_path, threshold=2800, batch_size=20000000, verbose=True, to_csv=False, output_path=None):
+def get_tick_bars(file_path, threshold=2800, batch_size=20000000, verbose=True, to_csv=False, output_path=None, additional_features=[]):
     """
     Creates the tick bars: date_time, open, high, low, close.
 
@@ -189,6 +185,6 @@ def get_tick_bars(file_path, threshold=2800, batch_size=20000000, verbose=True, 
     :return: Dataframe of tick bars
     """
     bars = StandardBars(file_path=file_path, metric='cum_ticks',
-                        threshold=threshold, batch_size=batch_size)
+                        threshold=threshold, batch_size=batch_size, additional_features=additional_features)
     tick_bars = bars.batch_run(verbose=verbose, to_csv=to_csv, output_path=output_path)
     return tick_bars

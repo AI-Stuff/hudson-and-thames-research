@@ -120,9 +120,6 @@ class ImbalanceBars(BaseBars):
                 high_price, low_price = -np.inf, np.inf
                 self.cache = []
 
-                # Update cache after bar generation (exp_num_ticks was changed after bar generation)
-                self._update_cache(date_time, price, low_price,
-                                   high_price, cum_ticks, cum_volume, cum_theta)
         return list_bars
 
     def _update_counters(self):
@@ -191,7 +188,7 @@ class ImbalanceBars(BaseBars):
 
 
 def get_dollar_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                              batch_size=2e7, verbose=True, to_csv=False, output_path=None):
+                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
     """
     Creates the dollar imbalance bars: date_time, open, high, low, close, volume.
 
@@ -205,7 +202,7 @@ def get_dollar_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
     :return: DataFrame of dollar bars
     """
     bars = ImbalanceBars(file_path=file_path, metric='dollar_imbalance', num_prev_bars=num_prev_bars,
-                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size)
+                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size, additional_features=additional_features)
     dollar_imbalance_bars = bars.batch_run(
         verbose=verbose, to_csv=to_csv, output_path=output_path)
 
@@ -213,7 +210,7 @@ def get_dollar_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
 
 
 def get_volume_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                              batch_size=2e7, verbose=True, to_csv=False, output_path=None):
+                              batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
     """
     Creates the volume imbalance bars: date_time, open, high, low, close, volume.
 
@@ -227,7 +224,7 @@ def get_volume_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
     :return: DataFrame of volume bars
     """
     bars = ImbalanceBars(file_path=file_path, metric='volume_imbalance', num_prev_bars=num_prev_bars,
-                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size)
+                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size, additional_features=additional_features)
     volume_imbalance_bars = bars.batch_run(
         verbose=verbose, to_csv=to_csv, output_path=output_path)
 
@@ -235,7 +232,7 @@ def get_volume_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=10000
 
 
 def get_tick_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
-                            batch_size=2e7, verbose=True, to_csv=False, output_path=None):
+                            batch_size=2e7, verbose=True, to_csv=False, output_path=None, additional_features=[]):
     """
     Creates the tick imbalance bars: date_time, open, high, low, close, volume.
 
@@ -249,7 +246,7 @@ def get_tick_imbalance_bars(file_path, num_prev_bars, exp_num_ticks_init=100000,
     :return: DataFrame of tick bars
     """
     bars = ImbalanceBars(file_path=file_path, metric='tick_imbalance', num_prev_bars=num_prev_bars,
-                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size)
+                         exp_num_ticks_init=exp_num_ticks_init, batch_size=batch_size, additional_features=additional_features)
     tick_imbalance_bars = bars.batch_run(
         verbose=verbose, to_csv=to_csv, output_path=output_path)
 

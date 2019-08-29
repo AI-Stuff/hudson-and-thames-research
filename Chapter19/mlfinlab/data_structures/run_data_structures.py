@@ -149,10 +149,6 @@ class RunBars(BaseBars):
                 high_price, low_price = -np.inf, np.inf
                 self.cache = []
                 self._reset_ticks_in_bar()
-
-                # Update cache after bar generation (exp_num_ticks was changed after bar generation)
-                self._update_cache(date_time, price, low_price, high_price, cum_theta_sell, cum_theta_buy,
-                                   cum_ticks, buy_ticks, cum_volume)
         return list_bars
 
     def _update_counters(self):
