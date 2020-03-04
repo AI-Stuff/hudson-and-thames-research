@@ -33,10 +33,6 @@ Specifically the following data structures:
 * Volume Bars: Sampled every 28'000 contracts
 * Tick Bars: Sampled every 2'800 ticks
 
-### Notebook Naming Convention
-
-```yyyy-mm-dd_initials_dash-separated-notebook-description``` Example: 2019-02-22_JFJ_meta-labels.
-
 ## Installation
 
 Recommended versions:
