@@ -1,21 +1,29 @@
-MIT License
+All rights reserved.
 
-Copyright (c) 2019 Hudson and Thames
+Copyright (c) 2019, Hudson and Thames Quantitative Research
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This codebase is open-source* only in the sense that the code is free to use
+as-is, and the source code is publicly available, however, all other rights
+are reserved under the Hudson and Thames Quantitative Research brand.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Our intention is to make some of the techniques developed publicly available
+and to promote research in quantitative finance and machine learning.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. Users may use the code as-is.
+2. All modifications made, must be added to the respective repositories
+   and all contribution's copyright falls under the Hudson and Thames brand.
+3. Rights to reproduce, distribute, or create derivative works must be
+   granted in writing. Requests for permissions must be directed to
+   research@hudsonthames.org
+4. Neither the name of the copyright holder nor the names of its contributors
+   may be used to endorse or promote products.
+5. No user may use our code or any part thereof to sell, market, or distribute for any reason whatsoever,
+   especially to make a profit of any kind whatsoever.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
