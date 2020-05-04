@@ -4,3 +4,4 @@
 .ipynb_checkpoints
 *.pickle
 Online Portfolio Selection/data/*
+*.db
